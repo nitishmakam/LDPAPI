@@ -1,19 +1,58 @@
-from flask import Blueprint,request,make_response
-# from flask_bcrypt import bcrypt
-from flask_jwt import jwt_required
+from flask import Blueprint, request, make_response, jsonify
+from flask_bcrypt import bcrypt
+import jwt
 from app import app
+from datetime import datetime, timedelta
 from app.token_required import token_required
-from app.models import *
 users = Blueprint("users", __name__, url_prefix="/users")
+from app import mydb
 
-user=User(username="nitish",email="a",password="b")
-user.save()
+user = mydb["User"]
 
-@users.route("/register/usernameExists/<username>",methods=['GET'])
-def register(username=None):
-    request.args.get('username',username)
-    existing_users = User.query.filter({User.username:username}).first()
-    if(existing_users==None):
-        return "Hello,"+username
+
+@users.route("/usernameExists/<username>", methods=['GET'])
+def check(username=None):
+    request.args.get('username', username)
+    existing_users = user.find({"username": username})
+    if (not existing_users.count()):
+        return ("", 200)
     else:
-        return make_response("Username is already taken",409)
+        error = {'message': 'Username not available'}
+        return jsonify(error), 409
+
+
+@users.route("/register", methods=['POST'])
+def add_user():
+    print(request.json)
+    email = request.json['email']
+    existing_users = user.find({'email': email})
+    if (existing_users.count()):
+        error = {'message': 'An account already exists with this email id.'}
+        return jsonify(error), 409
+    username = request.json['username']
+    password = request.json['password']
+    obj = {'username': username, 'email': email, 'password': password}
+    user.insert(obj)
+    return "", 200
+
+
+@users.route("/login", methods=['POST'])
+def login():
+    username = request.json['username']
+    password = request.json['password']
+    # print(username, password)
+    existing_users = user.find(
+        {"$and": [{
+            'username': username
+        }, {
+            'password': password
+        }]})
+    if (existing_users.count()):
+        token = jwt.encode({
+            'username': username,
+            'exp': datetime.utcnow() + timedelta(seconds=15)
+        }, app.config.get('SECRET_KEY'))
+        response = {'token': token}
+        return jsonify(str(token)), 200
+    else:
+        return "", 403

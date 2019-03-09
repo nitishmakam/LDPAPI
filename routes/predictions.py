@@ -1,8 +1,16 @@
 from flask import Blueprint
-from flask_jwt import jwt_required
+import jwt
+from app import app
+prediction = Blueprint("prediction", __name__, url_prefix="/prediction")
 
-prediction = Blueprint("prediction",__name__,url_prefix="/prediction")
 
-@prediction.route("/")
+@prediction.route("/", methods=['GET'])
 def index():
+    if (not request.json['token']):
+        try:
+            jwt.decode(request.json['token'], app.config.get('SECRET_KEY'))
+        except jwt.ExpiredSignatureError:
+            return "", 403
+        except jwt.InvalidTokenError:
+            return "", 403
     return "Hello,Prediction!"

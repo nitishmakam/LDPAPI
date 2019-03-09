@@ -8,6 +8,11 @@ from .predictions import prediction
 app.register_blueprint(users)
 app.register_blueprint(prediction)
 
+@app.route('/')
+def index():
+    return "Hey,there!"
+
+    
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):

@@ -1,4 +1,5 @@
 flask
 pymongo
-flask_jwt
+jwt
 flask_bcrypt
+flask_cors
