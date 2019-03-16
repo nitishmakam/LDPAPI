@@ -50,9 +50,10 @@ def login():
     if (existing_users.count()):
         token = jwt.encode({
             'username': username,
-            'exp': datetime.utcnow() + timedelta(seconds=15)
+            'exp': datetime.utcnow() + timedelta(seconds=3000)
         }, app.config.get('SECRET_KEY'))
-        response = {'token': token}
-        return jsonify(str(token)), 200
+        response = {'token': token.decode('UTF-8')}
+        print(response)
+        return jsonify(response) , 200
     else:
         return "", 403
