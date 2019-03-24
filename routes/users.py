@@ -12,7 +12,6 @@ user = mydb["User"]
 
 @users.route("/usernameExists/<username>", methods=['GET'])
 def check(username=None):
-    request.args.get('username', username)
     existing_users = user.find({"username": username})
     if (not existing_users.count()):
         return ("", 200)
@@ -23,7 +22,6 @@ def check(username=None):
 
 @users.route("/register", methods=['POST'])
 def add_user():
-    print(request.json)
     email = request.json['email']
     existing_users = user.find({'email': email})
     if (existing_users.count()):
@@ -40,7 +38,6 @@ def add_user():
 def login():
     username = request.json['username']
     password = request.json['password']
-    # print(username, password)
     existing_users = user.find(
         {"$and": [{
             'username': username
@@ -53,7 +50,6 @@ def login():
             'exp': datetime.utcnow() + timedelta(seconds=3000)
         }, app.config.get('SECRET_KEY'))
         response = {'token': token.decode('UTF-8')}
-        print(response)
         return jsonify(response) , 200
     else:
         return "", 403
