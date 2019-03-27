@@ -26,8 +26,8 @@ def index():
 # Expects a comma separated string with 253 values
 # Needs work
 #
-@token_required
 @prediction.route("/generate", methods=['POST'])
+@token_required
 def generate():
     row = request.json['row']
     df = pd.read_csv(pd.compat.StringIO(row), header=None)
