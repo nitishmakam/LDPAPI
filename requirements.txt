@@ -3,3 +3,7 @@ pymongo
 jwt
 flask_bcrypt
 flask_cors
+flask_jwt
+numpy
+pandas
+lightgbm
