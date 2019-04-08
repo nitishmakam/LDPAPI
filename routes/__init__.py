@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint,render_template
 from flask_jwt import JWT, jwt_required
 from app import app
 
@@ -10,7 +10,7 @@ app.register_blueprint(prediction)
 
 @app.route('/')
 def index():
-    return "Hey,there!"
+    return "Hello"
 
     
 def token_required(f):

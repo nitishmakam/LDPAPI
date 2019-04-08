@@ -2,7 +2,7 @@ from flask import Blueprint, request, make_response, jsonify
 import jwt
 from app import app
 from app.token_required import token_required
-prediction = Blueprint("prediction", __name__, url_prefix="/prediction")
+prediction = Blueprint("prediction", __name__, url_prefix="/api/prediction")
 
 
 @prediction.route("/generate", methods=['POST'])

@@ -4,7 +4,7 @@ import jwt
 from app import app
 from datetime import datetime, timedelta
 from app.token_required import token_required
-users = Blueprint("users", __name__, url_prefix="/users")
+users = Blueprint("/users", __name__, url_prefix="/api/users")
 from app import mydb
 
 user = mydb["User"]
