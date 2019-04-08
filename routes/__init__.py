@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 from flask import Blueprint,render_template
 from flask_jwt import JWT, jwt_required
+=======
+from flask import Blueprint
+>>>>>>> 9568d7321e64eae58ba08e78216ef5e515b3f094
 from app import app
 
 from .users import users
@@ -10,6 +14,7 @@ app.register_blueprint(prediction)
 
 @app.route('/')
 def index():
+<<<<<<< HEAD
     return "Hello"
 
     
@@ -29,3 +34,6 @@ def token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+=======
+    return "Hey,there!"
+>>>>>>> 9568d7321e64eae58ba08e78216ef5e515b3f094
