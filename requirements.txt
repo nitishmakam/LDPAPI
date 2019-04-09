@@ -1,9 +1,8 @@
 flask
 pymongo
-jwt
 flask_bcrypt
 flask_cors
-flask_jwt
+PyJWT
 numpy
 pandas
 lightgbm
