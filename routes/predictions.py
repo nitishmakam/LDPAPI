@@ -12,29 +12,12 @@ import numpy as np
 
 prediction = Blueprint("prediction", __name__, url_prefix="/api/prediction")
 
-
-# @prediction.route("/generate", methods=['POST'])
-# # @token_required
-# def generate():
-#     # if (not request.json['token']):
-#     #     try:
-#     #         jwt.decode(request.json['token'], app.config.get('SECRET_KEY'))
-#     #     except jwt.ExpiredSignatureError:
-#     #         return "", 403
-#     #     except jwt.InvalidTokenError:
-#     #         return "", 403
-#     # return "Hello,Prediction!"
-#     print(request.json)
-#     return "", 200
-
-
-
 #
 # Assuming the attributes are all in the root of the json request
 # Ignored the two drop down attributes for now
 #
 @prediction.route("/generate", methods=['POST'])
-@token_required
+#@token_required
 def generate():
     modelfiles = [
         "lgb-model-1554813671-0.txt",
@@ -65,7 +48,7 @@ def generate():
     return jsonify(result)
 
 @prediction.route("/save", methods=['POST'])
-@token_required
+#@token_required
 def save():
     token = request.headers.get("token")
     decoded = jwt.decode(token, app.config["SECRET_KEY"])
@@ -76,8 +59,8 @@ def save():
     return "", 200
 
 
-@prediction.route("/getPredictions", methods=['GET'])
-@token_required
+@prediction.route("/", methods=['GET'])
+#@token_required
 def getPredictions():
     token = request.headers.get("token")
     decoded = jwt.decode(token, app.config["SECRET_KEY"])
@@ -89,8 +72,8 @@ def getPredictions():
     return jsonify(results)
 
 
-@prediction.route("/deletePrediction/<pid>", methods=['GET'])
-@token_required
+@prediction.route("/<pid>", methods=['DELETE'])
+#@token_required
 def deletePrediction(pid=None):
     result = predcoll.delete_one({"_id": ObjectId(pid)})
     return "", 200 if result.deleted_count == 1 else 400
