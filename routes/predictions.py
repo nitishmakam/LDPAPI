@@ -4,6 +4,7 @@ import os
 from app import app
 from app.token_required import token_required
 from app import mydb
+from bson.objectid import ObjectId
 predcoll = mydb["Prediction"]
 
 import lightgbm as lgb
@@ -33,7 +34,7 @@ prediction = Blueprint("prediction", __name__, url_prefix="/api/prediction")
 # Ignored the two drop down attributes for now
 #
 @prediction.route("/generate", methods=['POST'])
-#@token_required
+@token_required
 def generate():
     modelfiles = [
         "lgb-model-1554813671-0.txt",
@@ -64,8 +65,32 @@ def generate():
     return jsonify(result)
 
 @prediction.route("/save", methods=['POST'])
-#@token_required
+@token_required
 def save():
+    token = request.headers.get("token")
+    decoded = jwt.decode(token, app.config["SECRET_KEY"])
+    username = decoded.get("username")
     req = request.get_json()
+    req["username"] = username
     predcoll.insert(req)
     return "", 200
+
+
+@prediction.route("/getPredictions", methods=['GET'])
+@token_required
+def getPredictions():
+    token = request.headers.get("token")
+    decoded = jwt.decode(token, app.config["SECRET_KEY"])
+    username = decoded.get("username")
+    preds = predcoll.find({"username": username})
+    results = {str(pred["_id"]):pred for pred in preds}
+    for key in results:
+        results[key].pop("_id")
+    return jsonify(results)
+
+
+@prediction.route("/deletePrediction/<pid>", methods=['GET'])
+@token_required
+def deletePrediction(pid=None):
+    result = predcoll.delete_one({"_id": ObjectId(pid)})
+    return "", 200 if result.deleted_count == 1 else 400
