@@ -66,14 +66,19 @@ def getPredictions():
     decoded = jwt.decode(token, app.config["SECRET_KEY"])
     username = decoded.get("username")
     preds = predcoll.find({"username": username})
-    results = {str(pred["_id"]):pred for pred in preds}
-    for key in results:
-        results[key].pop("_id")
+    results = [pred for pred in preds]
+    for res in results:
+        res["id"] = str(res["_id"])
+        res.pop("_id")
     return jsonify(results)
 
 
 @prediction.route("/<pid>", methods=['DELETE'])
 #@token_required
 def deletePrediction(pid=None):
-    result = predcoll.delete_one({"_id": ObjectId(pid)})
+    token = request.headers.get("token")
+    decoded = jwt.decode(token, app.config["SECRET_KEY"])
+    username = decoded.get("username")
+    result = predcoll.delete_one({"_id": ObjectId(pid),
+                                  "username": username})
     return "", 200 if result.deleted_count == 1 else 400
