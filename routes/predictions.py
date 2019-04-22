@@ -65,7 +65,7 @@ def generate():
 
 
 @prediction.route("/save", methods=['POST'])
-#@token_required
+@token_required
 def save():
     token = request.headers.get("token")
     decoded = jwt.decode(token, app.config["SECRET_KEY"])
@@ -77,7 +77,7 @@ def save():
 
 
 @prediction.route("/", methods=['GET'])
-#@token_required
+@token_required
 def getPredictions():
     token = request.headers.get("token")
     decoded = jwt.decode(token, app.config["SECRET_KEY"])
@@ -91,13 +91,11 @@ def getPredictions():
 
 
 @prediction.route("/<pid>", methods=['DELETE'])
-#@token_required
+@token_required
 def deletePrediction(pid=None):
     token = request.headers.get("token")
     decoded = jwt.decode(token, app.config["SECRET_KEY"])
     username = decoded.get("username")
-    # result = predcoll.delete_one({"_id": ObjectId(pid),
-    #                               "username": username})
     result = predcoll.remove({"_id": ObjectId(pid), "username": username})
     print(result)
     return "", 200 if result['n'] == 1 else 400
