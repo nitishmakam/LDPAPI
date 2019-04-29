@@ -48,14 +48,14 @@ def generate():
     ]
     row = []
     for feat in features:
-        if (feat == "DAYS_BIRTH"):
-            date_format = "%Y-%m-%d"
-            today = datetime.now()
-            birthdate = datetime.strptime(req[feat], date_format)
-            delta = today - birthdate
-            row.append(delta.days)
-        else:
-            row.append(req[feat])
+        # if (feat == "DAYS_BIRTH"):
+        #     date_format = "%Y-%m-%d"
+        #     today = datetime.now()
+        #     birthdate = datetime.strptime(req[feat], date_format)
+        #     delta = today - birthdate
+        #     row.append(delta.days)
+        # else:
+        row.append(req[feat])
 
     row = np.asarray(row)
     row = row.reshape(1, row.shape[0])
