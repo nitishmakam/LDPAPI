@@ -1,6 +1,5 @@
 flask
 pymongo
-flask_bcrypt
 flask_cors
 PyJWT
 numpy

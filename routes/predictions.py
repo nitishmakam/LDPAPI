@@ -25,8 +25,6 @@ def generate():
         "lgb-model-1555340227-0.txt",
         "lgb-model-1555340227-1.txt",
         "lgb-model-1555340227-2.txt",
-        "lgb-model-1555340227-3.txt",
-        "lgb-model-1555340227-4.txt",
     ]
     req = request.get_json()
     features = [
